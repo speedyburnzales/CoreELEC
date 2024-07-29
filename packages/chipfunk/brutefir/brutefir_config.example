@@ -1,0 +1,58 @@
+sampling_rate: 44100;       # sampling rate in Hz of audio interfaces
+filter_length: 1024;        # length of filters
+
+overflow_warnings: true;    # echo warnings to stderr if overflow occurs
+show_progress: false;       # echo filtering progress to stderr
+
+coeff "left" {
+        filename: "dirac pulse";        # Use dirac-pulse for testing
+#        filename: "~/.config/brutefir/my_coeffs.txt";
+        format: "text";         # text, S16_BE, S16_LE, FLOAT_LE ...
+        attenuation: 0;
+};
+
+coeff "right" {
+        filename: "dirac pulse";        # Use dirac-pulse for testing
+#        filename: "~/.config/brutefir/my_coeffs_right.txt";
+        format: "text";         # text, S16_BE, S16_LE, FLOAT_LE ...
+        attenuation: 0;
+};
+
+# module and parameters to get audio
+input "left", "right" {
+        device: "pulse" {
+#                server: "";    # Host to connect to
+                app_name: "BruteFIR 1.0o-pulse module";    # This application name
+                device: "BruteFIR.monitor";
+                stream_name: "Input for BruteFIR service";
+        };
+        sample: "S16_LE";   # sample format
+        channels: 2/0,1;    # number of open channels / which to use
+        mute: false,false;  # mute active on startup for each channel
+};
+
+# module and parameters to put audio
+output "left", "right" {
+        device: "pulse" {
+#                server: "";    # Host to connect to
+                app_name: "BruteFIR 1.0o-pulse module";    # This application name
+                device: "alsa_output.default";
+                stream_name: "Output of BruteFIR service";
+        };
+        sample: "S16_LE";   # sample format
+        channels: 2/0,1;    # number of open channels / which to use
+        mute: false,false;  # mute active on startup for each channel
+};
+
+filter "left" {
+        inputs: "left";
+        outputs: "left";
+        coeff: "left";
+};
+
+filter "right" {
+        inputs: "right";
+        outputs: "right";
+        coeff: "right";
+};
+

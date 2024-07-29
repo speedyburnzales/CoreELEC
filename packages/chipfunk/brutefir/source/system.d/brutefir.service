@@ -1,0 +1,15 @@
+[Unit]
+Description=BruteFIR - FFT Convolver
+After=pulseaudio.service
+Before=kodi.service
+
+[Service]
+ExecStartPre=/storage/.kodi/addons/brutefir/bin/startup.sh
+ExecStart=/storage/.kodi/addons/brutefir/bin/brutefir
+ExecStopPost=/storage/.kodi/addons/brutefir/bin/shutdown.sh
+Restart=always
+RestartSec=2
+Environment=LD_LIBRARY_PATH='/usr/lib:/storage/.kodi/addons/fftw3/lib:/storage/.kodi/addons/fftw3f/lib:/usr/lib/pulseaudio'
+
+[Install]
+WantedBy=kodi.target

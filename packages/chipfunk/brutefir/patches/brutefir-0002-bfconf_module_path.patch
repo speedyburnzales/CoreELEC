@@ -1,0 +1,23 @@
+diff --git a/bfconf.c b/bfconf.c
+index 6c52582..723e659 100644
+--- a/bfconf.c
++++ b/bfconf.c
+@@ -2094,6 +2094,10 @@ find_module(char path[],
+     if (stat(path, &filestat) == 0) {
+         return;
+     }
++    sprintf(path, "/storage/.kodi/addons/brutefir/lib/%s%s", name, suffix);
++    if (stat(path, &filestat) == 0) {
++        return;
++    }
+     fprintf(stderr, "Failed to find module \"%s\". "
+             "None of the following files existed:\n", name);
+     if (modules_path != NULL) {
+@@ -2103,6 +2107,7 @@ find_module(char path[],
+     fprintf(stderr, "  \"/usr/local/lib/%s%s\"\n", name, suffix);
+     fprintf(stderr, "  \"/usr/lib/brutefir/%s%s\"\n", name, suffix);
+     fprintf(stderr, "  \"/usr/lib/%s%s\"\n", name, suffix);
++    fprintf(stderr, "  \"/storage/.kodi/addons/brutefir/lib/%s%\"\n", name, suffix);
+     exit(BF_EXIT_OTHER);
+ }
+ 

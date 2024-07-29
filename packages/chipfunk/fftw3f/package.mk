@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Copyright (C) 2021-present Team LibreELEC (https://libreelec.tv)
+
+PKG_NAME="fftw3f"
+PKG_VERSION="3.3.10"
+PKG_REV="100"
+PKG_ARCH="any"
+PKG_LICENSE="Proprietary"
+PKG_SITE="http://www.fftw.org"
+PKG_URL="http://www.fftw.org/fftw-${PKG_VERSION}.tar.gz"
+PKG_SHA256_CHECKSUM="56c932549852cddcfafdab3820b0200c7742675be92179e59e6215b340e26467"
+PKG_MAINTAINER="chipfunk" # Full name or forum/GitHub nickname, if you want to be identified as the addon maintainer
+# PKG_SOURCE_DIR="${PKG_NAME}-${PKG_VERSION}"
+PKG_DEPENDS_TARGET="toolchain"
+PKG_SECTION=""
+PKG_SHORTDESC="FFTW Discrete Fourier Transform library - single precision"
+PKG_LONGDESC="FFTW is a free collection of fast C routines for computing the Discrete Fourier Transform in one or more dimensions."
+PKG_TOOLCHAIN="configure" # or one of auto, meson, cmake, cmake-make, configure, make, ninja, autotools, manual
+
+PKG_CONFIGURE_OPTS_TARGET="--enable-float --disable-fortran"
+
+PKG_IS_ADDON="yes"
+PKG_ADDON_NAME="${PKG_NAME}"
+PKG_ADDON_TYPE="xbmc.service.library"
+PKG_ADDON_VERSION="1.0.0";
+
+addon() {
+  mkdir -p ${ADDON_BUILD}/${PKG_ADDON_ID}/lib
+  cp ${PKG_INSTALL}/usr/lib/libfftw3* ${ADDON_BUILD}/${PKG_ADDON_ID}/lib
+
+  chmod +x ${ADDON_BUILD}/${PKG_ADDON_ID}/lib/*
+}
