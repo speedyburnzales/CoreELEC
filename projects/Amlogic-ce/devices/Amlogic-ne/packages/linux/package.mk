@@ -4,8 +4,8 @@
 # Copyright (C) 2022-present Team CoreELEC (https://coreelec.org)
 
 PKG_NAME="linux"
-PKG_VERSION="551a5ee697aa1b8d6fbf046052aadba580d3f2fc"
-PKG_SHA256="38222e0f66c548021bc12a1d7b6a2544f25fcb205608c5209b8a6d343e9c926f"
+PKG_VERSION="d783ab6ef99ea3bca0ce0b15464601d0e742bdd6"
+PKG_SHA256="d0920174cd19a484a9a4e25a2c02b6b972fe31945a33f69cbd4905e4598bec10"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.kernel.org"
 PKG_URL="https://github.com/CoreELEC/linux-amlogic/archive/${PKG_VERSION}.tar.gz"
@@ -249,6 +249,20 @@ make_target() {
 
   # collect all device tree in 'coreelec' subfolders
   cp ${DTB_PATH}/coreelec-*/*.dtb ${DTB_PATH} 2>/dev/null || :
+
+  ################################################################################
+  # make folder copy and decompile dtb files
+  mkdir -p ${DTB_PATH}/decompiled-dtb
+
+  for dtb_file in $(ls ${DTB_PATH}/*.dtb); do
+    dts_file="$(basename ${dtb_file})"
+    dts_file="${DTB_PATH}/decompiled-dtb/${dts_file%.*}.dts"
+    dtc -I dtb -O dts ${dtb_file} -o ${dts_file} 2>&1 | grep -Ev "Warning|incorrect" || : # ignore
+    if [ -f ${dts_file} ]; then
+      cp ${dtb_file} ${DTB_PATH}/decompiled-dtb
+    fi
+  done
+  ################################################################################
 
   # combine Amlogic multidtb by dtb.conf
   find_file_path bootloader/dtb.conf
